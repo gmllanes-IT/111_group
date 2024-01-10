@@ -17,23 +17,39 @@ class CreateAdminUserSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            'name' => 'Mutant-Admin',
-            'email' => 'admin@gmail.com',
+            'name' => 'Mutant-Owner',
+            'email' => 'owner@gmail.com',
             'password' => bcrypt('admin1234')
         ]);
 
         $role = Role::create(['name' => 'Owner']);
         Role::create(['name' => 'Manager']);
         Role::create(['name' => 'Accounts']);
-        Role::create(['name' => 'Admin']);
+        $adminRole=Role::create(['name' => 'Admin']);
         Role::create(['name' => 'CorporateOwner']);
         Role::create(['name' => 'CorporateManager']);
         Role::create(['name' => 'CorporateAdmin']);
-        Role::create(['name' => 'Client']);
+        $clientRole=Role::create(['name' => 'Client']);
         $permissions = Permission::pluck('id','id')->all();
 
         $role->syncPermissions($permissions);
 
         $user->assignRole([$role->id]);
+
+        $admin = User::create([
+            'name' => 'Mutant-Admin',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('admin1234')
+        ]);
+        $admin->assignRole([$adminRole->id]);
+
+        $client = User::create([
+            'name' => 'Mutant-Client',
+            'email' => 'client@gmail.com',
+            'password' => bcrypt('admin1234')
+        ]);
+        $client->assignRole([$clientRole->id]);
+
+        
     }
 }

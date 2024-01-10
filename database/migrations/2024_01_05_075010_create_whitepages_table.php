@@ -24,8 +24,12 @@ return new class extends Migration
             $table->string('ar_question_text')->nullable();
             $table->enum('type',['input','select','uploadfile','downloadfile','appointment','text','payment','OCR','shipment'])->nullable();
             $table->string('address')->nullable();
-            $table->date('date')->nullable();
-            $table->string('time')->nullable();
+            $table->date('optional_date_1')->nullable();
+            $table->string('optional_time_1')->nullable();
+            $table->date('optional_date_2')->nullable();
+            $table->string('optional_time_2')->nullable();
+            $table->date('optional_date_3')->nullable();
+            $table->string('optional_time_3')->nullable();
             $table->enum('appointment_type',['virtual','physical','phone'])->nullable();
             $table->float('price')->nullable();
             $table->string('en_option1')->nullable();
@@ -48,7 +52,6 @@ return new class extends Migration
             $table->enum('payment_status',['success','failed'])->nullable();
             $table->enum('stage_element_status',['pending','underreview','approved','unapprove'])->nullable();
             $table->timestamps();
-        
         });
     }
 
