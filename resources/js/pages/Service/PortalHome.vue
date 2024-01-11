@@ -1,47 +1,6 @@
-<script setup>
-import { ref } from "vue";
-import Footer from "../../components/Footer.vue";
-import Header from "../../components/Header.vue";
-import { MagnifyingGlassIcon } from "@heroicons/vue/20/solid";
-
-const selectedCategory = ref("all"); // Default category is "all"
-const serviceData = [
-    {
-        name: "Alternate Dispute Resolution",
-        category: "Legal",
-        imageSrc: "/images/Services/Alternate Dispute Resolution1.png",
-    },
-    {
-        name: "Arbitration and Mediation",
-        category: "Legal",
-        imageSrc: "/images/Services/Arbitration and Mediation2.png",
-    },
-    {
-        name: "Citizenship by Investment",
-        category: "Legal",
-        imageSrc: "/images/Services/Citizenship by Investment3.png",
-    },
-];
-
-function filterImages(category) {
-    selectedCategory.value = category;
-}
-
-function shouldDisplayService(service) {
-    if (selectedCategory.value === "all") {
-        return true; // Display all services when 'all' category is selected
-    } else {
-        return service.category === selectedCategory.value;
-    }
-}
-</script>
-
 <template>
-    <Header />
     <div class="flex flex-col justify-center items-center mt-4 bg-slate-50">
-        <div
-            class="m-10 md:m-[100px] flex flex-col justify-center items-center"
-        >
+        <div class="m-10 md:m-[100px] flex flex-col justify-center items-center">
             <h1 class="text-3xl md:text-5xl font-semibold mb-10">
                 Service Portal
             </h1>
@@ -52,218 +11,128 @@ function shouldDisplayService(service) {
                     and successful experience.
                 </p>
             </div>
-            <div class="relative mt-4 w-full md:w-[600px]">
-                <input
-                    type="text"
-                    class="border-none rounded-full w-full px-4 py-2 placeholder-gray-500"
-                    placeholder="Search Services"
-                />
-                <MagnifyingGlassIcon
-                    class="w-5 h-5 absolute top-1/2 right-3 transform -translate-y-1/2 text-black"
-                />
+            <div>
+                <div class="relative mt-4 w-full md:w-[600px]">
+                    <input v-model="searchQuery" @input="searchServices" type="text"
+                        class="border-none rounded-full w-full px-4 py-2 placeholder-gray-500"
+                        placeholder="Search Services" />
+                    <MagnifyingGlassIcon class="w-5 h-5 absolute top-1/2 right-3 transform -translate-y-1/2 text-black" />
+                </div>
+
+                <div v-if="searchResults.length > 0 && searchQuery !== ''">
+                    <ul>
+                        <li v-for="(result, index) in searchResults.slice(0, 5)" :key="result.id"
+                            @click="selectService(result)">
+                            {{ result.name }}
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
     <div>
-        <div class="flex justify-center mt-10 gap-5">
-            <button
-                @click="filterImages('all')"
-                :class="{ 'bg-[#eeeeee]': selectedCategory === 'all' }"
-                class="text-[13px] font-bold rounded-full bg-[#eeeeee] py-2 px-4 flex items-center"
-            >
-                All
-            </button>
-            <button
-                class="text-[13px] font-bold rounded-full bg-[#eeeeee] py-2 px-4 flex items-center"
-            >
-                Imamigration
-            </button>
-            <button
-                class="text-[13px] font-bold rounded-full bg-[#eeeeee] py-2 px-4 flex items-center"
-            >
-                Legal
-            </button>
-        </div>
-        <div class="flex justify-center my-10 mx-[7rem] gap-4 flex-wrap">
-            <div
-                v-for="service in serviceData"
-                :key="service.name"
-                v-if="shouldDisplayService(service)"
-                class="w-[300px] flex flex-col justify-center items-center"
-            >
-                <div class="image-container">
-                    <img :src="service.imageSrc" :alt="service.name" />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    {{ service.name }} #
-                </p>
+        <div>
+            <div class="flex justify-center mt-10 gap-5">
+                <button @click="filterImages('all')" :class="{ 'bg-[#dfc822] text-white': selectedCategory === 'all' }"
+                    class="text-[13px] font-bold rounded-full bg-[#eeeeee] py-2 px-4 flex items-center">
+                    All
+                </button>
+
+                <button v-for="category in categories.slice().reverse()" :key="category.id"
+                    @click="filterImages(category.id)"
+                    :class="{ 'bg-[#dfc822] text-white': selectedCategory === category.id }"
+                    class="text-[13px] font-bold rounded-full bg-[#eeeeee] py-2 px-4 flex items-center">
+                    {{ category.name }}
+                </button>
             </div>
 
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Citizenship by Investment3.png"
-                        alt=""
-                    />
+
+        </div>
+
+        <div>
+            <div class="flex justify-center my-10 mx-[7rem] gap-4 flex-wrap">
+                <div v-for="service in filteredServices" :key="service.id"
+                    class="w-[300px] flex flex-col justify-center items-center">
+                    <div class="image-container">
+                        <img :src="service.image" alt="" />
+                        <p class="mb-2 font-semibold text-center">{{ service.name }}</p>
+                    </div>
+
                 </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Citizenship by Investment
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Competition Law and Anti-Trust4.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img src="/images/Services/Corporate  M&A5.png" alt="" />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Alternate Dispute Resolution
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Legal Document Attestation6.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Arbitration and Mediation
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Employment & Administrative Law7.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Citizenship by Investment
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img src="/images/Services/Immigration8.png" alt="" />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Intellectual Property9.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Personal Data Protection & Privacy law10.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img src="/images/Services/Post Citizenship11.png" alt="" />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Private Wealth & Family Business12.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img src="/images/Services/Real Estate13.png" alt="" />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Regulatory Compliance & Enforcement14.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Residency by Investment15.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Shipping and Maritime16.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img src="/images/Services/Tax and Revenue17.png" alt="" />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
-            </div>
-            <div class="w-[300px] flex flex-col justify-center items-center">
-                <div class="image-container">
-                    <img
-                        src="/images/Services/Technology Media & Telco18.png"
-                        alt=""
-                    />
-                </div>
-                <p class="mb-2 hover:underline font-semibold">
-                    Competition Law and Anti-Trust
-                </p>
             </div>
         </div>
+
     </div>
 </template>
+
+<script setup>
+import { ref, onMounted, computed } from 'vue';
+import axios from 'axios';
+import Footer from "../../components/Footer.vue";
+import Header from "../../components/Header.vue";
+import { MagnifyingGlassIcon } from "@heroicons/vue/20/solid";
+
+const services = ref([]);
+const categories = ref([]);
+const selectedCategory = ref('all');
+const searchQuery = ref('');
+const searchResults = ref([]);
+
+const searchServices = async () => {
+    try {
+        const response = await axios.get('/api/services', { params: { search: searchQuery.value } });
+        searchResults.value = response.data.services;
+    } catch (error) {
+        console.error('Error searching services:', error);
+    }
+};
+
+const selectService = async (selectedService) => {
+    try {
+        // You can fetch additional details or perform other actions here based on the selected service
+        const response = await axios.get(`/api/services/${selectedService.id}`);
+        console.log('Selected service details:', response.data);
+    } catch (error) {
+        console.error('Error fetching service details:', error);
+    }
+};
+
+const fetchServices = async () => {
+    try {
+        const response = await axios.get('/api/services');
+        console.log('API Response:', response.data);
+        services.value = response.data.services;
+        categories.value = getUniqueCategories();
+    } catch (error) {
+        console.error('Error fetching services:', error);
+    }
+};
+
+const getUniqueCategories = () => {
+    const uniqueCategories = [...new Set(services.value.map(service => service.category.id))];
+    return uniqueCategories.map(categoryId => {
+        return { id: categoryId, name: services.value.find(service => service.category.id === categoryId).category.name };
+    });
+};
+
+const filterImages = (categoryId) => {
+    selectedCategory.value = categoryId;
+};
+
+const filteredServices = computed(() => {
+    if (selectedCategory.value === 'all') {
+        return services.value;
+    } else {
+        return services.value.filter(service => service.category.id === selectedCategory.value);
+    }
+});
+
+onMounted(() => {
+    fetchServices();
+});
+</script>
+
 <style>
 .image-container {
     position: relative;
@@ -275,6 +144,11 @@ function shouldDisplayService(service) {
 }
 
 .image-container:hover img {
-    transform: scale(1.1); /* Adjust the scale factor as needed */
+    transform: scale(1.1);
+    /* Adjust the scale factor as needed */
+}
+
+.image-container:hover p {
+    text-decoration: underline;
 }
 </style>
