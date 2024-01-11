@@ -183,7 +183,7 @@ const legalAreas = [
                     Related Services
                 </h1>
 
-            <div class="flex justify-start my-8 mx-[7rem] gap-4 flex-wrap">
+            <div class="flex justify-center md:justify-start my-8 mx-[7rem] gap-4 flex-wrap">
                 <div class="w-[300px] flex flex-col justify-center items-center">
                     <div class="image-container">
                         <img
