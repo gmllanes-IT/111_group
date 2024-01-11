@@ -5,6 +5,7 @@ import NotFound from '../../pages/NotFound.vue';
 import Footer from '../../components/Footer.vue'
 import Header from '../../components/Header.vue';
 import PortalHome from '../../pages/Service/PortalHome.vue'
+import AlternateDisputeResolution from '../../pages/Service/AlternateDisputeResolution.vue'
 
 
 const routes = [
@@ -31,6 +32,11 @@ const routes = [
         path: '/PortalHome',
         name: '',
         component: PortalHome
+    },
+    {
+        path: '/AlternateDisputeResolution',
+        name: '',
+        component: AlternateDisputeResolution
     },
     {
         path: '/:pathMatch(.*)*',

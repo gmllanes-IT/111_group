@@ -1,4 +1,5 @@
 <template>
+    <Header />
     <div class="flex flex-col justify-center items-center mt-4 bg-slate-50">
         <div class="m-10 md:m-[100px] flex flex-col justify-center items-center">
             <h1 class="text-3xl md:text-5xl font-semibold mb-10">
